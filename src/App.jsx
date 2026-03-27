@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { showInterstitial } from './admob.js';
+import { showInterstitial, showRewarded, isRewardedReady, isAdFree, hideBanner, showBanner, startAdFreeWatcher } from './admob.js';
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 const REFRESH_INTERVALS = [
@@ -376,6 +376,52 @@ function AuspiciousBanner() {
         <span className="auspicious-days">{next.diff === 0 ? 'Today!' : `in ${next.diff} day${next.diff > 1 ? 's' : ''}`}</span>
       </div>
       <div className="auspicious-note">{next.note}</div>
+    </div>
+  );
+}
+
+// ─── Ad Strip — rewarded ad CTA or ad-free status ───────────────────────────
+function AdStrip() {
+  const [adFree, setAdFree] = useState(isAdFree());
+  const [remaining, setRemaining] = useState('');
+
+  useEffect(() => {
+    const tick = setInterval(() => {
+      const free = isAdFree();
+      setAdFree(free);
+      if (free) {
+        const ms = parseInt(localStorage.getItem('adFreeUntil') || '0', 10) - Date.now();
+        if (ms > 0) {
+          const mins = Math.ceil(ms / 60000);
+          setRemaining(`${mins}m`);
+        }
+      }
+    }, 10000);
+    return () => clearInterval(tick);
+  }, []);
+
+  const handleWatchAd = async () => {
+    const success = await showRewarded();
+    if (success) {
+      setAdFree(true);
+      hideBanner();
+      startAdFreeWatcher();
+    }
+  };
+
+  if (adFree) {
+    return (
+      <div className="ad-strip ad-strip--free">
+        <span className="ad-strip-icon">✦</span>
+        <span>Ad-free for {remaining}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="ad-strip" onClick={handleWatchAd}>
+      <span className="ad-strip-icon">▶</span>
+      <span>Watch a short ad — go ad-free for 30 min</span>
     </div>
   );
 }
@@ -2277,6 +2323,11 @@ export default function App() {
     catch { return []; }
   });
 
+  const [founderMode, setFounderMode] = useState(() => {
+    try { return localStorage.getItem('bsx_founder') === '1'; }
+    catch { return false; }
+  });
+
   const alertsRef = useRef(alerts);
   useEffect(() => { alertsRef.current = alerts; }, [alerts]);
 
@@ -2287,6 +2338,26 @@ export default function App() {
   }, [theme]);
 
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
+
+  // Founder mode — long-press title 3s to toggle, hides all ads
+  const founderTimer = useRef(null);
+  const handleTitleDown = () => {
+    founderTimer.current = setTimeout(() => {
+      setFounderMode(prev => {
+        const next = !prev;
+        localStorage.setItem('bsx_founder', next ? '1' : '0');
+        if (next) { hideBanner(); }
+        else { showBanner(); }
+        return next;
+      });
+    }, 10000);
+  };
+  const handleTitleUp = () => { if (founderTimer.current) clearTimeout(founderTimer.current); };
+
+  // On mount, hide banner if founder mode is on
+  useEffect(() => {
+    if (founderMode) hideBanner();
+  }, [founderMode]);
 
   // Persist alerts
   useEffect(() => {
@@ -2370,7 +2441,7 @@ export default function App() {
     const newCount = tabCount + 1;
     setTabCount(newCount);
     setActiveTab(id);
-    if (newCount % 4 === 0) {
+    if (newCount % 5 === 0 && !founderMode) {
       showInterstitial();
     }
   };
@@ -2388,7 +2459,14 @@ export default function App() {
       <header className="header">
         <div className="header-left">
           <span className="live-dot" />
-          <h1 className="app-title">BS BullionX</h1>
+          <h1
+            className="app-title"
+            onTouchStart={handleTitleDown}
+            onTouchEnd={handleTitleUp}
+            onMouseDown={handleTitleDown}
+            onMouseUp={handleTitleUp}
+            onMouseLeave={handleTitleUp}
+          >BS BullionX</h1>
           <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">
             {theme === 'dark' ? '☀' : '☽'}
           </button>
@@ -2441,10 +2519,8 @@ export default function App() {
         silverPerGramINR={silverPerGramINR}
       />
 
-      {/* ── Ad Banner ── */}
-      <div className="ad-banner">
-        <div className="ad-banner-inner">Advertisement</div>
-      </div>
+      {/* ── Ad-Free / Watch Ad Strip ── */}
+      {!founderMode && <AdStrip />}
 
       {/* ── Content ── */}
       <main className="content">

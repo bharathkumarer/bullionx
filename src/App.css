@@ -288,25 +288,35 @@ body {
   100% { transform: translateX(-50%); }
 }
 
-/* ── Ad Banner Placeholder ────────────────────── */
-.ad-banner {
-  height: 52px;
-  background: rgba(255,255,255,0.02);
+/* ── Ad Strip (rewarded ad CTA / ad-free status) ── */
+.ad-strip {
+  height: 40px;
+  background: linear-gradient(90deg, rgba(255,215,0,0.08), rgba(255,215,0,0.03));
   border-bottom: 1px solid var(--border-card);
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   flex-shrink: 0;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 0.3px;
+  transition: background 0.2s;
 }
-
-.ad-banner-inner {
-  font-size: 10px;
-  color: var(--text-dim);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  border: 1px dashed rgba(255,255,255,0.08);
-  padding: 6px 24px;
-  border-radius: 4px;
+.ad-strip:active {
+  background: rgba(255,215,0,0.15);
+}
+.ad-strip--free {
+  background: linear-gradient(90deg, rgba(76,175,80,0.10), rgba(76,175,80,0.04));
+  color: #81c784;
+  cursor: default;
+}
+.ad-strip--free:active {
+  background: linear-gradient(90deg, rgba(76,175,80,0.10), rgba(76,175,80,0.04));
+}
+.ad-strip-icon {
+  font-size: 14px;
 }
 
 /* ── Scrollable Content ───────────────────────── */

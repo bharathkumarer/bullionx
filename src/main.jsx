@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import './App.css';
-import { initialize as initAdMob, showBanner } from './admob.js';
+import { initialize as initAdMob, showBanner, showRewardedInterstitial, isAdFree, isFounderMode } from './admob.js';
+
+let lastPauseTime = 0;
 
 async function bootstrap() {
   // Hide splash screen (Capacitor native only)
@@ -22,9 +24,30 @@ async function bootstrap() {
     // Web mode
   }
 
-  // Initialize AdMob and show banner
+  // Initialize AdMob and show banner (skip in founder mode)
   await initAdMob();
-  await showBanner();
+  if (!isFounderMode()) await showBanner();
+
+  // Listen for app state changes — show rewarded interstitial on resume after 10+ min
+  try {
+    const { App: CapApp } = await import('@capacitor/app');
+    CapApp.addListener('appStateChange', async ({ isActive }) => {
+      if (!isActive) {
+        lastPauseTime = Date.now();
+      } else if (lastPauseTime > 0) {
+        const awayMinutes = (Date.now() - lastPauseTime) / 60000;
+        if (awayMinutes >= 10 && !isAdFree() && !isFounderMode()) {
+          await showRewardedInterstitial();
+        }
+        // Re-show banner on resume if not ad-free and not founder
+        if (!isAdFree() && !isFounderMode()) {
+          await showBanner();
+        }
+      }
+    });
+  } catch {
+    // Web mode — no app state listener
+  }
 }
 
 bootstrap();

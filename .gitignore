@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Deployment caches
+.netlify
+.wrangler
+
+# Claude Code
+.claude
+
+# Android signing keys (never commit these)
+*.jks
+*.keystore
+google-services.json
