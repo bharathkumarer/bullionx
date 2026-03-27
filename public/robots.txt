@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://bullionlive-test.netlify.app/sitemap.xml

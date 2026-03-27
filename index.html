@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Theme & PWA -->
+    <meta name="theme-color" content="#0a0a1a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BullionX" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.svg" />
+
+    <!-- SEO -->
+    <title>BS BullionX – Live Gold, Silver & Platinum Prices in India (INR)</title>
+    <meta name="description" content="Track live gold, silver & platinum prices in INR. Real-time COMEX futures, 24K/22K/18K karat rates, city-wise prices across India, price alerts, and interactive charts. Free bullion price tracker." />
+    <meta name="keywords" content="gold price today, silver price today, gold rate India, silver rate India, platinum price, gold price INR, 22K gold rate, 24K gold price, COMEX gold, bullion price, gold rate Chennai, gold rate Mumbai, gold rate Delhi, live gold price, gold price per gram" />
+    <meta name="author" content="BS BullionX" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://bullionlive-test.netlify.app/" />
+
+    <!-- Open Graph (WhatsApp, Facebook, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="BS BullionX – Live Gold & Silver Prices in India" />
+    <meta property="og:description" content="Real-time gold, silver & platinum prices in INR. COMEX futures, karat rates, city prices, alerts & charts." />
+    <meta property="og:url" content="https://bullionlive-test.netlify.app/" />
+    <meta property="og:site_name" content="BS BullionX" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="BS BullionX – Live Gold & Silver Prices in India" />
+    <meta name="twitter:description" content="Real-time gold, silver & platinum prices in INR. Free bullion price tracker." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data (JSON-LD) for Google Search -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "BS BullionX",
+      "description": "Live Gold, Silver & Platinum prices in INR for the Indian market",
+      "url": "https://bullionlive-test.netlify.app",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "BS BullionX"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Register service worker for PWA
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>

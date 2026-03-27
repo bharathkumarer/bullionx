@@ -1,0 +1,39 @@
+{
+  "name": "BS BullionX – Live Gold & Silver Prices",
+  "short_name": "BullionX",
+  "description": "Live Gold, Silver & Platinum prices in INR. Real-time COMEX futures, karat rates, city-wise prices, and price alerts for the Indian market.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a1a",
+  "theme_color": "#0a0a1a",
+  "orientation": "portrait",
+  "categories": ["finance", "business"],
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Gold Prices",
+      "url": "/?tab=gold",
+      "description": "View live gold prices"
+    },
+    {
+      "name": "Silver Prices",
+      "url": "/?tab=silver",
+      "description": "View live silver prices"
+    }
+  ]
+}
